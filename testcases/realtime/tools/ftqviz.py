@@ -31,29 +31,30 @@ from pylab import *
 from sys import *
 from getopt import *
 
-NS_PER_S  = 1000000000
+NS_PER_S = 1000000000
 NS_PER_MS = 1000000
 NS_PER_US = 1000
+
 
 def smooth(x, wlen):
     if x.size < wlen:
         raise ValueError("Input vector needs to be bigger than window size.")
 
     # reflect the signal to avoid transients... ?
-    s = r_[2*x[0]-x[wlen:1:-1], x, 2*x[-1]-x[-1:-wlen:-1]]
+    s = r_[2 * x[0] - x[wlen:1:-1], x, 2 * x[-1] - x[-1:-wlen:-1]]
     w = hamming(wlen)
 
     # generate the smoothed signal
-    y = convolve(w/w.sum(), s, mode='same')
+    y = convolve(w / w.sum(), s, mode="same")
     # recenter the the smoothed signal over the originals (slide along x)
-    y1 = y[wlen-1:-wlen+1]
+    y1 = y[wlen - 1 : -wlen + 1]
     return y1
 
 
 def my_fft(x, sample_hz):
     X = abs(fftshift(fft(x)))
-    freq = fftshift(fftfreq(len(x), 1.0/sample_hz))
-    return array([freq, abs(X)/len(x)])
+    freq = fftshift(fftfreq(len(x), 1.0 / sample_hz))
+    return array([freq, abs(X) / len(x)])
 
 
 def smooth_fft(timefile, countfile, sample_hz, wlen):
@@ -65,17 +66,17 @@ def smooth_fft(timefile, countfile, sample_hz, wlen):
     print("Interpolated Sample Rate: ", sample_hz, " HZ")
     print("Hamming Window Length: ", wlen)
 
-    t = fromfile(timefile, dtype=int64, sep='\n')
-    x = fromfile(countfile, dtype=int64, sep='\n')
+    t = fromfile(timefile, dtype=int64, sep="\n")
+    x = fromfile(countfile, dtype=int64, sep="\n")
 
     # interpolate the data to achieve a uniform sample rate for use in the fft
-    xi_len = (t[len(t)-1] - t[0])/ns_per_sample
+    xi_len = (t[len(t) - 1] - t[0]) / ns_per_sample
     xi = zeros(xi_len)
     last_j = 0
-    for i in range(0, len(t)-1):
-        j = (t[i] - t[0])/ns_per_sample
+    for i in range(0, len(t) - 1):
+        j = (t[i] - t[0]) / ns_per_sample
         xi[j] = x[i]
-        m = (xi[j]-xi[last_j])/(j-last_j)
+        m = (xi[j] - xi[last_j]) / (j - last_j)
         for k in range(last_j + 1, j):
             xi[k] = m * (k - last_j) + xi[last_j]
         last_j = j
@@ -93,26 +94,26 @@ def smooth_fft(timefile, countfile, sample_hz, wlen):
     # plot the hamming window
     subplot(311)
     plot(hamming(wlen))
-    axis([0,wlen-1,0,1.1])
-    title(str(wlen)+" Point Hamming Window")
+    axis([0, wlen - 1, 0, 1.1])
+    title(str(wlen) + " Point Hamming Window")
 
     # plot the signals
     subplot(312)
-    ts = arange(0, len(xi), dtype=float)/sample_hz # time signal in units of seconds
+    ts = arange(0, len(xi), dtype=float) / sample_hz  # time signal in units of seconds
     plot(ts, xi, alpha=0.2)
     plot(ts, y)
-    legend(['interpolated', 'smoothed'])
-    title("Counts (interpolated sample rate: "+str(sample_hz)+" HZ)")
+    legend(["interpolated", "smoothed"])
+    title("Counts (interpolated sample rate: " + str(sample_hz) + " HZ)")
     xlabel("Time (s)")
     ylabel("Units of Work")
 
     # plot the fft
     subplot(313)
-    plot(X[0], X[1], ls='steps', alpha=0.2)
-    plot(Y[0], Y[1], ls='steps')
+    plot(X[0], X[1], ls="steps", alpha=0.2)
+    plot(Y[0], Y[1], ls="steps")
     ylim(ymax=20)
     xlim(xmin=-3000, xmax=3000)
-    legend(['interpolated', 'smoothed'])
+    legend(["interpolated", "smoothed"])
     title("FFT")
     xlabel("Frequency")
     ylabel("Amplitude")
@@ -121,10 +122,14 @@ def smooth_fft(timefile, countfile, sample_hz, wlen):
 
 
 def usage():
-        print("usage: "+argv[0]+" -t times-file -c counts-file [-s SAMPLING_HZ] [-w WINDOW_LEN] [-h]")
+    print(
+        "usage: "
+        + argv[0]
+        + " -t times-file -c counts-file [-s SAMPLING_HZ] [-w WINDOW_LEN] [-h]"
+    )
 
 
-if __name__=='__main__':
+if __name__ == "__main__":
 
     try:
         opts, args = getopt(argv[1:], "c:hs:t:w:")

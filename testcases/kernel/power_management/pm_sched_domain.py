@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-''' This Python script validates sched domain information in dmesg
+""" This Python script validates sched domain information in dmesg
     with information in sysfs topology
-'''
+"""
 
 import os
 import sys
@@ -10,9 +10,11 @@ from optparse import OptionParser
 
 __author__ = "Poornima Nayak <mpnayak@linux.vnet.ibm.com>"
 
+
 class Usage(Exception):
     def __init__(self, msg):
         self.msg = msg
+
 
 def main(argv=None):
     if argv is None:
@@ -20,10 +22,20 @@ def main(argv=None):
 
     usage = "-w"
     parser = OptionParser(usage)
-    parser.add_option("-c", "--mc_level", dest="mc_level", default=-1,
-        help="Sched mc power saving value 0/1/2")
-    parser.add_option("-t", "--smt_level", dest="smt_level", default=-1,
-        help="Sched smt power saving value 0/1/2")
+    parser.add_option(
+        "-c",
+        "--mc_level",
+        dest="mc_level",
+        default=-1,
+        help="Sched mc power saving value 0/1/2",
+    )
+    parser.add_option(
+        "-t",
+        "--smt_level",
+        dest="smt_level",
+        default=-1,
+        help="Sched smt power saving value 0/1/2",
+    )
     (options, args) = parser.parse_args()
 
     try:
@@ -41,13 +53,14 @@ def main(argv=None):
             reset_schedmc()
             if is_hyper_threaded():
                 reset_schedsmt()
-                return(status)
+                return status
         else:
             print("INFO: Invalid arguments given")
             return 1
     except Exception as details:
         print("INFO: sched domain test failed: ", details)
-        return(1)
+        return 1
+
 
 # Run test based on the command line arguments
 if __name__ == "__main__":
