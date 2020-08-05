@@ -67,7 +67,7 @@ static struct test_case_t {
 	{&existing_fname, O_DIRECTORY, ENOTDIR},
 	{&toolong_fname, O_RDWR, ENAMETOOLONG},
 	{&user2_fname, O_WRONLY, EACCES},
-//     {&unmapped_fname, O_CREAT, EFAULT} // TODO: Enable once git issue 297 is fixed.
+	{&unmapped_fname, O_CREAT, EFAULT}
 };
 
 void verify_open(unsigned int i)

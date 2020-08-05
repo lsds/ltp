@@ -158,7 +158,7 @@ static void run(void)
 {
 	sigpending_info();
 	test_sigpending();
-//     test_efault_on_invalid_sigset(); // TODO: Enable once git issue 297 is fixed
+	test_efault_on_invalid_sigset();
 }
 
 static struct tst_test test = {

@@ -83,11 +83,11 @@ struct test_case tc[] = {
 	 .clktype = MAX_CLOCKS + 1,
 	 .exp_err = EINVAL,
 	},
-//     {
-//      .clktype = CLOCK_REALTIME, // TODO: Enable once git issue 297 is fixed
-//      .modes = ADJ_ALL,
-//      .exp_err = EFAULT,
-//     },
+	{
+	 .clktype = CLOCK_REALTIME,
+	 .modes = ADJ_ALL,
+	 .exp_err = EFAULT,
+	},
 	{
 	 .clktype = CLOCK_REALTIME,
 	 .modes = ADJ_TICK,

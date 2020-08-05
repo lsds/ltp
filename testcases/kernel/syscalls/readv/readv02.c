@@ -126,7 +126,7 @@ int main(int ac, char **av)
 				 "value");
 		}
 
-/*test2: // TODO: Enable once git issue 297 is fixed
+//test2:
 		l_seek(fd[0], CHUNK * 6, 0);
 		if (readv(fd[0], (rd_iovec + 6), 3) < 0) {
 			if (errno != EFAULT) {
@@ -143,7 +143,7 @@ int main(int ac, char **av)
 		} else {
 			tst_resm(TFAIL, "Error: readv returned a positive "
 				 "value");
-               }*/
+		}
 
 //test3:
 		if (readv(fd[1], (rd_iovec + 9), 1) < 0) {

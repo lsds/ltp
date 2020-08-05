@@ -76,7 +76,7 @@ static struct test_case_t {
 } test_cases[] = {
 	{ TEST_FILE1, TRUNC_LEN, EACCES },
 	{ TEST_FILE2, TRUNC_LEN, ENOTDIR },
-//     { NULL, TRUNC_LEN, EFAULT }, TODO: Enable once git issue 297 is fixed
+	{ NULL, TRUNC_LEN, EFAULT },
 	{ long_pathname, TRUNC_LEN, ENAMETOOLONG },
 	{ "", TRUNC_LEN, ENOENT },
 	{ TEST_DIR1, TRUNC_LEN, EISDIR },

@@ -38,7 +38,7 @@ static struct tcase {
 	int exp_errno;
 } tcases[] = {
 	{&inv_fd, &buf, sizeof(buf), EBADF},
-//     {&fd, &bad_addr, sizeof(buf), EFAULT}, TODO: Enable once git issue 297 is fixed
+	{&fd, &bad_addr, sizeof(buf), EFAULT},
 	{&pipefd[1], &buf, sizeof(buf), EPIPE},
 };
 
