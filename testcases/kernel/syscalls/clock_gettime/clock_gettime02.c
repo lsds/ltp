@@ -43,42 +43,42 @@ struct test_case tc[] = {
 	 * Different POSIX clocks have different (*clock_get)() handlers.
 	 * It justifies testing EFAULT for all.
 	 */
-//     {				// TODO: Enable all EFAULT tests below once git issue 297 is fixed
-//      .clktype = CLOCK_REALTIME,
-//      .exp_err = EFAULT,
-//      },
-//     {
-//      .clktype = CLOCK_MONOTONIC,
-//      .exp_err = EFAULT,
-//      },
-//     {
-//      .clktype = CLOCK_PROCESS_CPUTIME_ID,
-//      .exp_err = EFAULT,
-//      },
-//     {
-//      .clktype = CLOCK_THREAD_CPUTIME_ID,
-//      .exp_err = EFAULT,
-//      },
-//     {
-//      .clktype = CLOCK_REALTIME_COARSE,
-//      .exp_err = EFAULT,
-//      .allow_inval = 1,
-//      },
-//     {
-//      .clktype = CLOCK_MONOTONIC_COARSE,
-//      .exp_err = EFAULT,
-//      .allow_inval = 1,
-//      },
-//     {
-//      .clktype = CLOCK_MONOTONIC_RAW,
-//      .exp_err = EFAULT,
-//      .allow_inval = 1,
-//      },
-//     {
-//      .clktype = CLOCK_BOOTTIME,
-//      .exp_err = EFAULT,
-//      .allow_inval = 1,
-//      },
+     {
+      .clktype = CLOCK_REALTIME,
+      .exp_err = EFAULT,
+      },
+     {
+      .clktype = CLOCK_MONOTONIC,
+      .exp_err = EFAULT,
+      },
+     {
+      .clktype = CLOCK_PROCESS_CPUTIME_ID,
+      .exp_err = EFAULT,
+      },
+     {
+      .clktype = CLOCK_THREAD_CPUTIME_ID,
+      .exp_err = EFAULT,
+      },
+     {
+      .clktype = CLOCK_REALTIME_COARSE,
+      .exp_err = EFAULT,
+      .allow_inval = 1,
+      },
+     {
+      .clktype = CLOCK_MONOTONIC_COARSE,
+      .exp_err = EFAULT,
+      .allow_inval = 1,
+      },
+     {
+      .clktype = CLOCK_MONOTONIC_RAW,
+      .exp_err = EFAULT,
+      .allow_inval = 1,
+      },
+     {
+      .clktype = CLOCK_BOOTTIME,
+      .exp_err = EFAULT,
+      .allow_inval = 1,
+      },
 };
 
 /*
