@@ -121,7 +121,7 @@ void setup(void)
 	tst_sig(NOFORK, DEF_HANDLER, cleanup);
 
 	tst_require_root();
-       tst_tmpdir();
+	tst_tmpdir();
 	ltpuser = SAFE_GETPWNAM(cleanup, "nobody");
 	SAFE_SETEUID(cleanup, ltpuser->pw_uid);
 
@@ -152,7 +152,7 @@ void setup(void)
 
 	for (n = 0; n < TST_TOTAL; n++) {
 		if (!test_cases[n].pathname)
-                       test_cases[n].pathname = 0;
+			test_cases[n].pathname = tst_get_bad_addr(cleanup);
 	}
 
 }
@@ -179,6 +179,6 @@ void truncate_verify(struct test_case_t *tc)
 
 void cleanup(void)
 {
-       tst_require_root();
+	tst_require_root();
 	tst_rmdir();
 }

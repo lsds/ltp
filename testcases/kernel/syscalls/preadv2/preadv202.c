@@ -95,7 +95,7 @@ static void setup(void)
 	fd4 = SAFE_OPEN(".", O_RDONLY);
 	SAFE_PIPE(fd5);
 
-       rd_iovec3[0].iov_base = 0;
+	rd_iovec3[0].iov_base = tst_get_bad_addr(NULL);
 }
 
 static void cleanup(void)

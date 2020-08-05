@@ -106,7 +106,7 @@ static void setup(void)
 	memset(long_pathname, '@', sizeof(long_pathname));
 	long_pathname[sizeof(long_pathname) - 1] = 0;
 
-       efault_fname = 0;
+	efault_fname = tst_get_bad_addr(NULL);
 }
 
 static struct tst_test test = {

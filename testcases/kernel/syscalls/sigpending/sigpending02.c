@@ -134,7 +134,7 @@ static void test_sigpending(void)
 static void test_efault_on_invalid_sigset(void)
 {
 	/* set sigset to point to an invalid location */
-       sigset_t *sigset = 0;
+	sigset_t *sigset = tst_get_bad_addr(NULL);
 
 	TEST(tested_sigpending(sigset));
 

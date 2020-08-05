@@ -200,7 +200,7 @@ void setup(void)
 	/* call individual setup functions */
 	for (ind = 0; Test_cases[ind].desc != NULL; ind++) {
 		if (!Test_cases[ind].pathname)
-                       Test_cases[ind].pathname = 0;
+			Test_cases[ind].pathname = tst_get_bad_addr(cleanup);
 		Test_cases[ind].setupfunc();
 	}
 }

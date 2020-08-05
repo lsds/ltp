@@ -133,7 +133,8 @@ static void bad_addr_setup(int i)
 	if (tcases[i].fname)
 		return;
 
-       tcases[i].fname = 0;
+	tcases[i].fname = SAFE_MMAP(0, 1, PROT_NONE,
+								MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
 }
 #endif
 

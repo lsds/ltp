@@ -145,7 +145,7 @@ static void verify_clock_adjtime(unsigned int i)
 
 	/* special case: EFAULT for bad addresses */
 	if (tc[i].exp_err == EFAULT)
-               txcptr = 0;
+		txcptr = tst_get_bad_addr(cleanup);
 
 	TEST(sys_clock_adjtime(tc[i].clktype, txcptr));
 	if (txcptr && tc[i].exp_err != EFAULT)

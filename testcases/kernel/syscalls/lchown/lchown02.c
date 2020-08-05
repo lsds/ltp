@@ -249,7 +249,7 @@ static void setup_eacces(int pos LTP_ATTRIBUTE_UNUSED)
  */
 static void setup_efault(int pos)
 {
-       test_cases[pos].pathname = 0;
+	test_cases[pos].pathname = tst_get_bad_addr(cleanup);
 }
 
 /*

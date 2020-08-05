@@ -109,7 +109,7 @@ void setup(void)
 	nobody = SAFE_GETPWNAM("nobody");
 	nobody_uid = nobody->pw_uid;
 
-       bad_addr = 0;
+	bad_addr = SAFE_MMAP(0, 1, PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
 
 	for (i = 0; i < ARRAY_SIZE(tc); i++) {
 		if (!tc[i].pathname)

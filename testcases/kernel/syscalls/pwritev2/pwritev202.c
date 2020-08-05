@@ -90,7 +90,7 @@ static void setup(void)
 	fd2 = SAFE_OPEN("file2", O_RDONLY | O_CREAT, 0644);
 	SAFE_PIPE(fd4);
 
-       wr_iovec3[0].iov_base = 0;
+	wr_iovec3[0].iov_base = tst_get_bad_addr(NULL);
 }
 
 static void cleanup(void)

@@ -105,7 +105,7 @@ static void setup(void)
 			tc[i].fd = fd;
 
 		if (!tc[i].key && tc[i].exp_err == EFAULT)
-                       tc[i].key = 0;
+			tc[i].key = tst_get_bad_addr(cleanup);
 	}
 }
 

@@ -66,7 +66,7 @@ static void setup(void)
 
 	for (n = 0; n < ARRAY_SIZE(tcases); n++) {
 		if (!tcases[n].name)
-                       tcases[n].name = 0;
+                       tcases[n].name = tst_get_bad_addr(NULL);
 	}
 }
 

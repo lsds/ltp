@@ -222,7 +222,14 @@ void setup(void)
 
 	fd[1] = -1;		/* Invalid file descriptor */
 
-       bad_addr = 0;
+// while issue 297 was pending we had
+//	  bad_addr = 0;
+// previously:
+	bad_addr = mmap(0, 1, PROT_NONE,
+					MAP_PRIVATE_EXCEPT_UCLINUX | MAP_ANONYMOUS, 0, 0);	
+	if (bad_addr == MAP_FAILED) {	
+		tst_brkm(TBROK, cleanup, "mmap failed");	
+	}
 	rd_iovec[6].iov_base = bad_addr;
 }
 

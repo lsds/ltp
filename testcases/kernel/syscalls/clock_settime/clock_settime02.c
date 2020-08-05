@@ -113,7 +113,7 @@ static void verify_clock_settime(unsigned int i)
 
 	/* bad pointer case */
 	if (tc[i].exp_err == EFAULT)
-               specptr = 0;
+		specptr = tst_get_bad_addr(NULL);
 
 	TEST(sys_clock_settime(tc[i].type, specptr));
 

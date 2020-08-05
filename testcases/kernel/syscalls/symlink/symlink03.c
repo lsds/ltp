@@ -122,7 +122,7 @@ struct test_case_t {		/* test case struct. to hold ref. test cond's */
 	{TEST_FILE1, SYM_FILE1, "No Search permissions to process",
 		    EACCES, setup1}, {
 	TEST_FILE2, SYM_FILE2, "Specified symlink already exists",
-		    EEXIST, setup2}, { 
+		    EEXIST, setup2}, {
 	TESTFILE, NULL, "Invalid address", EFAULT, no_setup}, {
 	TESTFILE, Longpathname, "Symlink path too long", ENAMETOOLONG,
 		    longpath_setup}, {

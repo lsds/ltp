@@ -43,7 +43,7 @@ static struct test_case_t {
 	/* EBADF - fd is invalid */
 	{
 	-1, &buf, EBADF},
-#ifndef UCLINUX 
+#ifndef UCLINUX
 	    /* Skip since uClinux does not implement memory protection */
 	    /* EFAULT - address for buf is invalid */
 	{

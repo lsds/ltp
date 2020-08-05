@@ -153,7 +153,7 @@ static void setup(void)
 	SAFE_TOUCH(cleanup, "regfile2", 0777, NULL);
 	SAFE_MKDIR(cleanup, "dir", 0777);
 
-       void *bad_addr = 0; // Changed as mmap is not supported in sgx
+    void *bad_addr = tst_get_bad_addr(cleanup); // Changed as mmap is not supported in sgx
 
 	for (n = 0; n < TST_TOTAL; n++) {
 		if (!test_cases[n].file1)
