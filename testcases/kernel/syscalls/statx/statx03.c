@@ -55,8 +55,8 @@ static struct test_case {
 	{.dfd = -1, .filename = &test_fname, .flag = 0,
 	 .mask = 0, .errnum = EBADF},
 
-//     {.dfd = AT_FDCWD, .filename = &efault_fname, .flag = 0, // TODO: Enable once git issue 297 is fixed
-//      .mask = 0, .errnum = EFAULT},
+	{.dfd = AT_FDCWD, .filename = &efault_fname, .flag = 0,
+	.mask = 0, .errnum = EFAULT},
 
 	{.dfd = AT_FDCWD, .filename = &test_fname, .flag = -1,
 	 .mask = 0, .errnum = EINVAL},

@@ -25,11 +25,12 @@ struct test_case {
 };
 
 struct test_case tc[] = {
-//     {                               /* case 01: REALTIME: timespec NULL   */
-//      .type = CLOCK_REALTIME,        // TODO: Enable once git issue 297 is fixed
-//      .exp_err = EFAULT,
-//      .replace = 1,
-//      },
+{
+					/* case 01: REALTIME: timespec NULL   */
+	 .type = CLOCK_REALTIME,
+	 .exp_err = EFAULT,
+	 .replace = 1,
+	},
 	{				/* case 02: REALTIME: tv_sec = -1     */
 	 .type = CLOCK_REALTIME,
 	 .newtime.tv_sec = -1,

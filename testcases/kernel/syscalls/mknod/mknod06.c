@@ -100,9 +100,9 @@ struct test_case_t {		/* test case struct. to hold ref. test cond's */
 	int exp_errno;
 	int (*setupfunc) ();
 } Test_cases[] = {
-       {"tnode_1", "Specified node already exists", EEXIST, setup1},
-//     {NULL, "Invalid address", EFAULT, no_setup}, // TODO: Enable once git issue 297 is fixed
-       {"testdir_2/tnode_2", "Non-existent file", ENOENT, no_setup}, {
+	{"tnode_1", "Specified node already exists", EEXIST, setup1},
+	{NULL, "Invalid address", EFAULT, no_setup},
+	{"testdir_2/tnode_2", "Non-existent file", ENOENT, no_setup}, {
 	"", "Pathname is empty", ENOENT, no_setup}, {
 	Longpathname, "Pathname too long", ENAMETOOLONG, longpath_setup}, {
 	"tnode/tnode_3", "Path contains regular file", ENOTDIR, setup3}, {
