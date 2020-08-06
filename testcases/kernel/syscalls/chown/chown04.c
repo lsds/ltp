@@ -87,7 +87,7 @@ static struct test_case_t {
 	{"", ENOENT},
 	{TEST_FILE3, ENOTDIR},
 	{TEST_FILE4, ELOOP},
-	{TEST_FILE5, EROFS}
+//{TEST_FILE5, EROFS} TODO: Enable after github issue 189 is fixed
 };
 
 TCID_DEFINE(chown04);
