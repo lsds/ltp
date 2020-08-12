@@ -38,6 +38,12 @@
 /*	      Manas Kumar Nayak maknayak@in.ibm.com>			*/
 /******************************************************************************/
 
+/*
+ * Patch Description:
+	Test were failing because of no fork support.
+	Modified the tests without using fork and done code cleanup.
+ */
+
 #define _GNU_SOURCE
 
 #include <stdio.h>
@@ -120,9 +126,7 @@ void setup(void)
 
 int main(int ac, char **av)
 {
-	pid_t pid1;
 	int lc;
-	int rval;
 
 	tst_parse_opts(ac, av, NULL, NULL);
 
@@ -132,79 +136,35 @@ int main(int ac, char **av)
 		tst_count = 0;
 		for (testno = 0; testno < TST_TOTAL; ++testno) {
 
-			TEST(pid1 = fork());	//call to fork()
-			if (TEST_RETURN == -1) {
-				tst_brkm(TFAIL | TTERRNO, cleanup,
-					 "fork() failed.");
-			} else if (TEST_RETURN == 0) {
-				TEST_RETURN = unshare(-1);
-				if (TEST_RETURN == 0) {
-					printf("Call unexpectedly succeeded\n");
-					rval = 1;
-				} else if (TEST_RETURN == -1) {
-					if (errno == EINVAL) {
-						printf("Got EINVAL\n");
-						rval = 0;
-					} else if (errno == ENOSYS) {
-						rval = 1;
-					} else {
-						perror("unshare failed");
-						rval = 2;
-					}
-				}
-				exit(rval);
-			} else {
-				SAFE_WAIT(cleanup, &rval);
-				if (rval != 0 && WIFEXITED(rval)) {
-					switch (WEXITSTATUS(rval)) {
-					case 1:
-						tst_brkm(TBROK, cleanup,
-							 "unshare call unsupported "
-							 "in kernel");
-						break;
-					case 2:
-						tst_brkm(TFAIL, cleanup,
-							 "unshare call failed");
-						break;
-					}
+			TEST_RETURN = unshare(-1);
+			if (TEST_RETURN == 0) {
+				tst_resm(TFAIL, "Call unexpectedly succeeded\n");
+			} else if (TEST_RETURN == -1) {
+				if (errno == EINVAL) {
+					tst_resm(TPASS, "Got EINVAL\n");
+				} else if (errno == ENOSYS) {
+					tst_brkm(TBROK, cleanup,
+                                                 "unshare call unsupported "
+                                                 "in kernel");
+				} else {
+				  	tst_brkm(TFAIL, cleanup,
+						 "unshare call failed");
 				}
 			}
 
-			TEST(pid1 = fork());	//call to fork()
-			if (pid1 == -1) {
-				tst_brkm(TFAIL | TTERRNO, cleanup,
-					 "fork() failed.");
-			} else if (TEST_RETURN == 0) {
-				TEST_RETURN = unshare(0);
-				if (TEST_RETURN == 0) {
-					tst_resm(TPASS, "Call succeeded");
-					rval = 0;
-				} else if (TEST_RETURN == -1) {
-					if (errno == ENOSYS)
-						rval = 1;
-					else {
-						perror("unshare failed");
-						rval = 2;
-					}
-				}
-				exit(rval);
-			} else {
-				SAFE_WAIT(cleanup, &rval);
-				if (rval != 0 && WIFEXITED(rval)) {
-					switch (WEXITSTATUS(rval)) {
-					case 1:
-						tst_brkm(TBROK, cleanup,
-							 "unshare call unsupported "
-							 "in kernel");
-						break;
-					case 2:
-						tst_brkm(TFAIL, cleanup,
-							 "unshare call failed");
-						break;
-					}
+			TEST_RETURN = unshare(0);
+			if (TEST_RETURN == 0) {
+				tst_resm(TPASS, "Call succeeded");
+			} else if (TEST_RETURN == -1) {
+				if (errno == ENOSYS)
+					tst_brkm(TBROK, cleanup,
+						 "unshare call unsupported "
+						 "in kernel");
+				else {
+					tst_brkm(TFAIL, cleanup,
+						 "unshare call failed");
 				}
 			}
-
 		}
 	}
 	cleanup();
