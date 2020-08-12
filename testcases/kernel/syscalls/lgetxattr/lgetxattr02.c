@@ -19,6 +19,15 @@
 * 3) lgetxattr(2) should return -1 and set errno to EFAULT.
 */
 
+/*
+ * Patch Description:
+    Test failure reason in SGX-LKL:
+    Tests were failing with no user_xattr support in tmp filesystem.
+
+ * Workaround to fix the issue:
+    Modified the tests to use root filesystem.
+ */
+
 #include "config.h"
 #include <errno.h>
 #include <sys/types.h>
@@ -83,12 +92,23 @@ static void setup(void)
 	}
 }
 
+void cleanup(void)
+{
+        remove("testfile");
+        remove("symlink");
+}
+
 static struct tst_test test = {
-	.needs_tmpdir = 1,
+	// .needs_tmpdir = 1 creates a test directory mounting /tmp filesystem
+	// commented this line, so that temporary directory will be not created becuase
+	// the test is failing with no xattr support. Now the files will be directly 
+	// created in the root filesystem.
+	// .needs_tmpdir = 1,
 	.needs_root = 1,
 	.test = verify_lgetxattr,
 	.tcnt = ARRAY_SIZE(tcase),
-	.setup = setup
+	.setup = setup,
+	.cleanup = cleanup
 };
 
 #else /* HAVE_SYS_XATTR_H */
