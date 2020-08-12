@@ -36,6 +36,11 @@
  *      maximum number of links.
  */
 
+/*
+ * Patch Description:
+       TODO: Enable tst_mkfs in setup at line no#192 once git issue 598 is fixed
+ */
+
 #define _GNU_SOURCE
 
 #include <sys/types.h>
@@ -182,7 +187,9 @@ static void setup(void)
 	for (i = 0; i < 43; i++)
 		strcat(looppathname, TESTDIR2);
 
-	tst_mkfs(cleanup, device, fs_type, NULL, NULL);
+	// This function uses system syscall which is not suported
+	// is sgx-lkl. Github issue https://github.com/lsds/sgx-lkl/issues/598
+	//tst_mkfs(cleanup, device, fs_type, NULL, NULL);
 	SAFE_MKDIR(cleanup, MNTPOINT, DIRMODE);
 	SAFE_MOUNT(cleanup, device, MNTPOINT, fs_type, 0, NULL);
 	mount_flag = 1;
