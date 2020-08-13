@@ -28,6 +28,14 @@
  *	system, expect an EINVAL.
  */
 
+/*
+ * Patch Description:
+	Test is failing to open files in O_DIRECT mode in /tmp file system.
+	O_DIRECT is to bypass the page cache while working with files. However, a tmpfs
+	itself lives inside the page cache, so there’s nothing that can be bypassed. Therefore, 
+	O_DIRECT on a tmpfs can’t really do anything. So modified the test to create files in the root filesystem.
+ */
+
 #define _GNU_SOURCE
 
 #include <stdio.h>
@@ -130,5 +138,11 @@ static struct tst_test test = {
 	.test = verify_read,
 	.setup = setup,
 	.cleanup = cleanup,
-	.needs_tmpdir = 1,
+	// .needs_tmpdir creates a temporary directory under tmp for testing
+	// Commenting this line will directly creates files under root filesystem.
+	// Test is failing to open files in O_DIRECT mode in /tmp file system.
+	// O_DIRECT is to bypass the page cache while working with files. However, a tmpfs
+	// itself lives inside the page cache, so there’s nothing that can be bypassed. Therefore, 
+	// O_DIRECT on a tmpfs can’t really do anything. So modified the test to create files in the root filesystem.
+	//.needs_tmpdir = 1, 
 };
