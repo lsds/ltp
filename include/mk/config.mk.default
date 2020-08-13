@@ -54,14 +54,14 @@ libdir			:= ${exec_prefix}/lib
 mandir			:= ${datarootdir}/man
 
 CPPFLAGS		:=
-CFLAGS			:= -g -O2
+CFLAGS			:= -g -O1
 LDLIBS			:=
 LDFLAGS			:=
 
 DEBUG_CFLAGS		?= -g
 
 # Please see README.mk-devel about -fstrict-aliasing.
-OPT_CFLAGS		?= -O2 -fno-strict-aliasing -pipe
+OPT_CFLAGS		?= -O1 -fno-strict-aliasing -pipe
 
 WCFLAGS			?= -Wall
 

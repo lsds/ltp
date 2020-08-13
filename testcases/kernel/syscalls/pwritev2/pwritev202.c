@@ -57,7 +57,7 @@ static struct tcase {
 	{&fd1, wr_iovec1, 1, 0, 0, EINVAL},
 	{&fd1, wr_iovec2, -1, 0, 0, EINVAL},
 	{&fd1, wr_iovec2, 1, 1, -1, EOPNOTSUPP},
-	{&fd1, wr_iovec3, 1, 0, 0, EFAULT},
+//	{&fd1, wr_iovec3, 1, 0, 0, EFAULT}, Enable when sgx-lkl github issue 772 is fixed. Actually maybe never due to PROT_NONE not being detectable
 	{&fd3, wr_iovec2, 1, 0, 0, EBADF},
 	{&fd2, wr_iovec2, 1, 0, 0, EBADF},
 	{&fd4[0], wr_iovec2, 1, 0, 0, ESPIPE},

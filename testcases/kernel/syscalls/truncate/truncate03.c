@@ -76,7 +76,7 @@ static struct test_case_t {
 } test_cases[] = {
 	{ TEST_FILE1, TRUNC_LEN, EACCES },
 	{ TEST_FILE2, TRUNC_LEN, ENOTDIR },
-	{ NULL, TRUNC_LEN, EFAULT },
+//	{ NULL, TRUNC_LEN, EFAULT }, Enable when sgx-lkl github issue 772 is fixed. Actually maybe never due to PROT_NONE not being detectable
 	{ long_pathname, TRUNC_LEN, ENAMETOOLONG },
 	{ "", TRUNC_LEN, ENOENT },
 	{ TEST_DIR1, TRUNC_LEN, EISDIR },

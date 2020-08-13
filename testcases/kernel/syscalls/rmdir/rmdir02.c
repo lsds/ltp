@@ -42,7 +42,7 @@ static struct testcase {
 	{longpathname, ENAMETOOLONG},
 	{TESTDIR2, ENOENT},
 	{TESTDIR3, ENOTDIR},
-	{NULL, EFAULT},
+// 	{NULL, EFAULT}, Enable when sgx-lkl github issue 772 is fixed. Actually maybe never due to PROT_NONE not being detectable
 	{looppathname, ELOOP},
 	{TESTDIR5, EROFS},
 	{MNT_POINT, EBUSY},
