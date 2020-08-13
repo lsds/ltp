@@ -112,8 +112,9 @@ static void setup(void)
 	tst_sig(NOFORK, DEF_HANDLER, cleanup);
 
 	fd1 = SAFE_OPEN(cleanup, "tfile_1", O_RDWR | O_CREAT, 0666);
-
-	tst_mkfs(cleanup, device, fs_type, NULL, NULL);
+	// This function use system syscall which is not suported
+	// is sgx-lkl. Github issue https://github.com/lsds/sgx-lkl/issues/598
+	//tst_mkfs(cleanup, device, fs_type, NULL, NULL);
 	SAFE_MKDIR(cleanup, "mntpoint", DIR_MODE);
 	SAFE_MOUNT(cleanup, device, "mntpoint", fs_type, 0, NULL);
 	mount_flag = 1;
