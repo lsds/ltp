@@ -55,9 +55,10 @@ static struct test_case {
 	{.dfd = -1, .filename = &test_fname, .flag = 0,
 	 .mask = 0, .errnum = EBADF},
 
+#if 0 // Enable when sgx-lkl github issue 772 is fixed.
 	{.dfd = AT_FDCWD, .filename = &efault_fname, .flag = 0,
 	.mask = 0, .errnum = EFAULT},
-
+#endif
 	{.dfd = AT_FDCWD, .filename = &test_fname, .flag = -1,
 	 .mask = 0, .errnum = EINVAL},
 

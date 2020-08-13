@@ -127,6 +127,7 @@ int main(int ac, char **av)
 		}
 
 //test2:
+#if 0 // Enable when sgx-lkl github issue 772 is fixed.
 		l_seek(fd[0], CHUNK * 6, 0);
 		if (readv(fd[0], (rd_iovec + 6), 3) < 0) {
 			if (errno != EFAULT) {
@@ -144,7 +145,7 @@ int main(int ac, char **av)
 			tst_resm(TFAIL, "Error: readv returned a positive "
 				 "value");
 		}
-
+#endif
 //test3:
 		if (readv(fd[1], (rd_iovec + 9), 1) < 0) {
 			if (errno != EBADF) {

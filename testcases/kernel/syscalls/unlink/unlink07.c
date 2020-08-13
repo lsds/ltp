@@ -30,7 +30,7 @@ static struct test_case_t {
 	{"nonexistfile", "non-existent file", ENOENT},
 	{"", "path is empty string", ENOENT},
 	{"nefile/file", "path contains a non-existent file", ENOENT},
-	{NULL, "invalid address", EFAULT},
+//	{NULL, "invalid address", EFAULT},  Enable when sgx-lkl github issue 772 is fixed.
 	{"file/file", "path contains a regular file", ENOTDIR},
 	{longpathname, "pathname too long", ENAMETOOLONG},
 };

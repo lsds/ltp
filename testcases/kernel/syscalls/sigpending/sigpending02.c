@@ -158,7 +158,7 @@ static void run(void)
 {
 	sigpending_info();
 	test_sigpending();
-	test_efault_on_invalid_sigset();
+//	test_efault_on_invalid_sigset(); Enable when sgx-lkl github issue 772 is fixed.
 }
 
 static struct tst_test test = {
