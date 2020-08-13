@@ -98,12 +98,13 @@ void *do_sub_thread(void* arg)
 	TEST(tst_fd2 = open(testfile, O_RDWR));
 
 	if (TEST_RETURN != -1) {
-		tst_resm(TPASS,
-			"open call succeeded as expected in thread2");
-		close(tst_fd2);
+	        close(tst_fd2);
+                tst_brkm(TBROK, cleanup, "open succeeded unexpectedly\n");
+        }
+	if (TEST_ERRNO == EACCES) {
+                tst_resm(TPASS, "open failed with EACCES as expected\n");
 	} else {
-		tst_brkm(TBROK, cleanup,
-			"open failed unexpectedly in thread2\n");
+		tst_brkm(TBROK, cleanup, "open failed unexpectedly in thread2\n");
 	}
 	pthread_exit(NULL);
 }

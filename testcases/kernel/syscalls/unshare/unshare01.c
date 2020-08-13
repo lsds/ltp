@@ -74,6 +74,11 @@
 /*	      Manas Kumar Nayak maknayak@in.ibm.com>				*/
 /********************************************************************************/
 
+/* Patch Description:
+	Tests were because no fork support.
+	Modified the tests without using fork and refactored the code.
+ */
+
 #define _GNU_SOURCE
 
 #include <stdio.h>
@@ -153,11 +158,27 @@ void setup(void)
 	tst_tmpdir();
 }
 
+void verify_unshare(int res, char *arg){
+	switch (res) {
+	case 0:
+                tst_resm(TPASS, "unshare with %s call "
+                        "succeeded\n", arg);
+                break;
+	case -1:
+                if (errno == ENOSYS)
+                    	tst_brkm(TCONF, cleanup,
+                                 "unshare %s not supported in "
+                                 "kernel", arg);
+                else {
+                        tst_brkm(TFAIL, cleanup,
+                                 "unshare %s failed", arg);
+                }
+	}
+}
+
 int main(int ac, char **av)
 {
-	pid_t pid1;
 	int lc;
-	int rval;
 
 	tst_parse_opts(ac, av, NULL, NULL);
 
@@ -166,119 +187,10 @@ int main(int ac, char **av)
 	for (lc = 0; TEST_LOOPING(lc); ++lc) {
 		tst_count = 0;
 		for (testno = 0; testno < TST_TOTAL; ++testno) {
-
-			pid1 = fork();	//call to fork()
-			if (pid1 == -1) {
-				tst_brkm(TFAIL | TERRNO, cleanup,
-					 "fork failed");
-			} else if (pid1 == 0) {
-				switch (unshare(CLONE_FILES)) {
-				case 0:
-					printf("unshare with CLONE_FILES call "
-					       "succeeded\n");
-					rval = 0;
-					break;
-				case -1:
-					if (errno == ENOSYS)
-						rval = 1;
-					else {
-						perror("unshare failed");
-						rval = 2;
-					}
-				}
-				exit(rval);
-			} else {
-				SAFE_WAIT(cleanup, &rval);
-				if (rval != 0 && WIFEXITED(rval)) {
-					switch (WEXITSTATUS(rval)) {
-					case 1:
-						tst_brkm(TCONF, cleanup,
-							 "unshare not supported in "
-							 "kernel");
-						break;
-					default:
-						tst_brkm(TFAIL, cleanup,
-							 "unshare failed");
-					}
-				}
-			}
-
-			pid1 = fork();
-			if (pid1 == -1) {
-				tst_brkm(TFAIL | TERRNO, cleanup,
-					 "fork failed");
-			} else if (pid1 == 0) {
-				switch (unshare(CLONE_FS)) {
-				case 0:
-					printf("unshare with CLONE_FS call "
-					       "succeeded\n");
-					rval = 0;
-					break;
-				case -1:
-					if (errno == ENOSYS)
-						rval = 1;
-					else {
-						perror("unshare failed");
-						rval = 2;
-					}
-				}
-				exit(rval);
-			} else {
-				SAFE_WAIT(cleanup, &rval);
-				if (rval != 0 && WIFEXITED(rval)) {
-					switch (WEXITSTATUS(rval)) {
-					case 1:
-						tst_brkm(TCONF, cleanup,
-							 "unshare not supported in "
-							 "kernel");
-						break;
-					default:
-						tst_brkm(TFAIL, cleanup,
-							 "unshare failed");
-					}
-				}
-			}
-
-			pid1 = fork();
-			if (pid1 == -1) {
-				tst_brkm(TFAIL | TERRNO, cleanup,
-					 "fork() failed.");
-			} else if (pid1 == 0) {
-				switch (unshare(CLONE_NEWNS)) {
-				case 0:
-					printf("unshare call with CLONE_NEWNS "
-					       "succeeded\n");
-					rval = 0;
-					break;
-				case -1:
-					if (errno == ENOSYS)
-						rval = 1;
-					else {
-						perror("unshare failed");
-						rval = 2;
-					}
-				}
-				exit(rval);
-			} else {
-				SAFE_WAIT(cleanup, &rval);
-				if (rval != 0 && WIFEXITED(rval)) {
-					switch (WEXITSTATUS(rval)) {
-					case 1:
-						tst_brkm(TCONF, cleanup,
-							 "unshare not supported in "
-							 "kernel");
-						break;
-					default:
-						tst_brkm(TFAIL, cleanup,
-							 "unshare failed");
-					}
-
-				}
-
-			}
-
+			verify_unshare(unshare(CLONE_FILES), "CLONE_FILES");
+			verify_unshare(unshare(CLONE_FS), "CLONE_FS");
+			verify_unshare(unshare(CLONE_NEWNS), "CLONE_NEWNS"); 
 		}
-
 	}
 	cleanup();
 	tst_exit();
