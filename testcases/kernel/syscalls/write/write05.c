@@ -82,8 +82,7 @@ static void setup(void)
 {
 	fd = SAFE_OPEN("write_test", O_RDWR | O_CREAT, 0644);
 
-	bad_addr = SAFE_MMAP(0, 1, PROT_NONE
-						MAP_PRIVATE | MAP_ANONY	MOUS, 0, 0);
+	bad_addr = SAFE_MMAP(0, 1, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
 
 	SAFE_PIPE(pipefd);
 	SAFE_CLOSE(pipefd[0]);
