@@ -61,7 +61,9 @@ static struct tcase {
 	{&badfd, &bufaddr, 1, EBADF},
 	{&fd2, &bufaddr, 1, EISDIR},
 #ifndef UCLINUX
+#if 0 // See sgx-lkl issue 772 - we cannot catch protected memory regions in lkl_access_ok
 	{&fd3, &outside_buf, 1, EFAULT},
+#endif
 #endif
 	{&fd4, &addr4, 1, EINVAL},
 	{&fd4, &addr5, 4096, EINVAL},

@@ -91,10 +91,12 @@ struct test_case_t {		/* test case structure */
 	,
 #ifndef UCLINUX
 	    /* Skip since uClinux does not implement memory protection */
+#if 0 // See sgx-lkl issue 772 - we cannot catch protected memory regions in lkl_access_ok
 	{
 	PF_INET, SOCK_STREAM, 0, (void *)-1, sizeof(buf), 0,
 		    -1, EFAULT, setup1, cleanup1, "invalid recv buffer"}
 	,
+#endif
 #endif
 	{
 	PF_INET, SOCK_STREAM, 0, buf, sizeof(buf), MSG_OOB,

@@ -94,12 +94,14 @@ struct test_case_t {		/* test case structure */
 		    "bad file descriptor"}
 	,
 #if !defined(UCLINUX)
+#if 0 // See sgx-lkl issue 772 - we cannot catch protected memory regions in lkl_access_ok
 	{
 	PF_INET, SOCK_STREAM, 0, SOL_SOCKET, SO_OOBINLINE, 0,
 		    sizeof(optval), (struct sockaddr *)&fsin1,
 		    sizeof(fsin1), -1, EFAULT, setup1, cleanup1,
 		    "invalid option buffer"}
 	,
+#endif
 #endif
 	{
 	PF_INET, SOCK_STREAM, 0, SOL_SOCKET, SO_OOBINLINE, &optval, 0,
