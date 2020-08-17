@@ -82,8 +82,13 @@ static void setup(void)
 {
 	fd = SAFE_OPEN("write_test", O_RDWR | O_CREAT, 0644);
 
-	bad_addr = SAFE_MMAP(0, 1, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
-
+	// Don't use SAFE_MMAP to set up "invalid memory". This will fail currently due to
+	// https://github.com/lsds/sgx-lkl/issues/787
+	// Once #787 is addressed, this should be able to be switched back.
+	// In the meantime using SAFE_MMAP will fail for reasons unrelated to this test.
+	//bad_addr = SAFE_MMAP(0, 1, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
+	bad_addr = 0
+		
 	SAFE_PIPE(pipefd);
 	SAFE_CLOSE(pipefd[0]);
 
