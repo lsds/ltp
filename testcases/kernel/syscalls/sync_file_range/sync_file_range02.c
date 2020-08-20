@@ -21,13 +21,14 @@
 #include "lapi/sync_file_range.h"
 #include "check_sync_file_range.h"
 
-#define MNTPOINT		"mnt_point"
+#define MNTPOINT		"/data"
 #define FNAME1			MNTPOINT"/test1"
 #define FNAME2			MNTPOINT"/test2"
 #define FNAME3			MNTPOINT"/test3"
 #define FILE_SZ_MB		32
 #define FILE_SZ			(FILE_SZ_MB * TST_MB)
 #define MODE			0644
+#define dev			"/dev/vdb"
 
 struct testcase {
 	char *fname;
@@ -48,7 +49,7 @@ static void verify_sync_file_range(struct testcase *tc)
 
 	lseek(fd, tc->write_off, SEEK_SET);
 
-	tst_dev_bytes_written(tst_device->dev);
+	tst_dev_bytes_written(dev);
 
 	tst_fill_fd(fd, 0, TST_MB, tc->write_size_mb);
 
@@ -60,7 +61,7 @@ static void verify_sync_file_range(struct testcase *tc)
 	if (TST_RET)
 		tst_brk(TFAIL | TTERRNO, "sync_file_range() failed");
 
-	written = tst_dev_bytes_written(tst_device->dev);
+	written = tst_dev_bytes_written(dev);
 
 	fsync(fd);
 
@@ -124,10 +125,6 @@ static void setup(void)
 static struct tst_test test = {
 	.tcnt = ARRAY_SIZE(testcases),
 	.needs_root = 1,
-	.mount_device = 1,
-	.all_filesystems = 1,
-	.dev_fs_flags = TST_FS_SKIP_FUSE,
-	.mntpoint = MNTPOINT,
 	.setup = setup,
 	.test = run,
 };
