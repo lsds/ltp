@@ -87,7 +87,7 @@ static void setup(void)
 	// Once #787 is addressed, this should be able to be switched back.
 	// In the meantime using SAFE_MMAP will fail for reasons unrelated to this test.
 	//bad_addr = SAFE_MMAP(0, 1, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
-	bad_addr = 0
+	bad_addr = 0;
 		
 	SAFE_PIPE(pipefd);
 	SAFE_CLOSE(pipefd[0]);

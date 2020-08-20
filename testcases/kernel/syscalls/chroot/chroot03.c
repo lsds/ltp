@@ -84,8 +84,7 @@ struct test_case_t {
 	     * attempt to chroot to a path pointing to an invalid address
 	     * and expect EFAULT as errno
 	     */
-	{
-//	(char *)-1, EFAULT}, Enable when sgx-lkl github issue 772 is fixed.
+//	{(char *)-1, EFAULT}, Enable when sgx-lkl github issue 772 is fixed.
 #endif
 	{symbolic_dir, ELOOP}
 };

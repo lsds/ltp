@@ -33,7 +33,7 @@ static struct tcase {
 	struct stat *stat_buf;
 	int exp_err;
 } tcases[] = {
-	{&fd_ebadf, &stat_buf, EBADF}
+	{&fd_ebadf, &stat_buf, EBADF},
 	{&fd_ok, NULL, EFAULT},
 };
 

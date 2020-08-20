@@ -94,6 +94,7 @@ struct test_case_t {		/* test case structure */
 		    cleanup1, "invalid socket buffer"},
 #endif
 	
+	{
 	PF_INET, SOCK_STREAM, 0, (struct sockaddr *)&sin1,
 		    3, -1, EINVAL, setup1, cleanup1, "invalid salen"}, {
 	0, 0, 0, (struct sockaddr *)&sin1,
