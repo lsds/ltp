@@ -22,7 +22,6 @@
 
 #include "test.h"
 #include "spawn_ptrace_child.h"
-#include "config.h"
 
 /* this should be sizeof(struct user), but that info is only found
  * in the kernel asm/user.h which is not exported to userspace.
