@@ -19,24 +19,21 @@
 #include <sys/types.h>
 #include "tst_test.h"
 
-#define MNTPOINT	"mnt_point"
-#define FNAME		MNTPOINT"/test"
+#define FNAME		"/data/test"
 #define FILE_SIZE_MB	32
 #define FILE_SIZE	(FILE_SIZE_MB * TST_MB)
 #define MODE		0644
-#define dev            "/dev/vda"
+#define dev		"/dev/vdb"
 
 static void verify_fdatasync(void)
 {
 	int fd;
 	unsigned long written;
 
-       rmdir(MNTPOINT);
-       SAFE_MKDIR(MNTPOINT, 0644);
-       SAFE_MOUNT(dev, MNTPOINT, "ext4", 0, NULL);
-	fd = SAFE_OPEN(FNAME, O_RDWR|O_CREAT, MODE);
 
-       tst_dev_bytes_written(dev);
+	fd = SAFE_OPEN(FNAME, O_RDWR|O_CREAT, MODE);
+	
+	tst_dev_bytes_written(dev);
 
 	tst_fill_fd(fd, 0, TST_MB, FILE_SIZE_MB);
 
@@ -45,12 +42,10 @@ static void verify_fdatasync(void)
 	if (TST_RET)
 		tst_brk(TFAIL | TTERRNO, "fdatasync(fd) failed");
 
-       written = tst_dev_bytes_written(dev);
+	written = tst_dev_bytes_written(dev);
 
 	SAFE_CLOSE(fd);
-       remove(FNAME);
-       SAFE_UMOUNT(MNTPOINT);
-       SAFE_RMDIR(MNTPOINT);
+	remove(FNAME);
 
 	if (written >= FILE_SIZE)
 		tst_res(TPASS, "Test file data synced to device");
