@@ -70,6 +70,13 @@
  *	Must run test as root.
  *
  */
+
+/*
+ * Patch Description:
+ 	Test was failing due to lackof fork support to create child processes.
+	So modified the tests using threads instead of fork.
+	Please refer test description above
+ */
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -83,12 +90,14 @@
 
 void setup();
 void cleanup();
+static void* first_child_thread(void* arg);
+static void* second_child_thread(void* arg);
 
 #define PERMS		0700
 
 char *TCID = "rename09";
 int TST_TOTAL = 1;
-
+int rval;
 char fdir[255], mdir[255];
 char fname[255], mname[255];
 uid_t nobody_uid, bin_uid;
@@ -96,9 +105,6 @@ uid_t nobody_uid, bin_uid;
 int main(int ac, char **av)
 {
 	int lc;
-	int rval;
-	pid_t pid, pid1;
-	int status;
 
 	/*
 	 * parse standard options
@@ -117,97 +123,34 @@ int main(int ac, char **av)
 
 		tst_count = 0;
 
-		if ((pid = FORK_OR_VFORK()) == -1) {
-			tst_brkm(TBROK, cleanup, "fork() #1 failed");
-		}
-
-		if (pid == 0) {	/* first child */
-			/* set to nobody */
-			rval = setreuid(nobody_uid, nobody_uid);
-			if (rval < 0) {
-				tst_resm(TWARN, "setreuid failed to "
-					 "to set the real uid to %d and "
-					 "effective uid to %d",
-					 nobody_uid, nobody_uid);
-				perror("setreuid");
-				exit(1);
-			}
-
-			/* create the a directory with 0700 permits */
-			if (mkdir(fdir, PERMS) == -1) {
-				tst_resm(TWARN, "mkdir(%s, %#o) Failed",
-					 fdir, PERMS);
-				exit(1);
-			}
-
-			/* create "old" file under it */
-			SAFE_TOUCH(cleanup, fname, 0700, NULL);
-
-			exit(0);
-		}
-
-		/* wait for child to exit */
-		wait(&status);
-		if (!WIFEXITED(status) || (WEXITSTATUS(status) != 0)) {
-			tst_brkm(TBROK, cleanup, "First child failed to set "
-				 "up conditions for the test");
-		}
-
-		if ((pid1 = FORK_OR_VFORK()) == -1) {
-			tst_brkm(TBROK, cleanup, "fork() #2 failed");
-		}
-
-		if (pid1 == 0) {	/* second child */
-			/* set to bin */
-			if ((rval = seteuid(bin_uid)) == -1) {
-				tst_resm(TWARN, "seteuid() failed");
-				perror("setreuid");
-				exit(1);
-			}
-
-			/* create "new" directory */
-			if (mkdir(mdir, PERMS) == -1) {
-				tst_resm(TWARN, "mkdir(%s, %#o) failed",
-					 mdir, PERMS);
-				exit(1);
-			}
-
-			SAFE_TOUCH(cleanup, mname, 0700, NULL);
-
-			/* rename "old" to "new" */
-			TEST(rename(fname, mname));
-			if (TEST_RETURN != -1) {
-				tst_resm(TFAIL, "call succeeded unexpectedly");
-				continue;
-			}
-
-			if (TEST_ERRNO != EACCES) {
-				tst_resm(TFAIL, "Expected EACCES got %d",
-					 TEST_ERRNO);
-			} else {
-				tst_resm(TPASS, "rename() returned EACCES");
-			}
-
-			/* set the process id back to root */
-			if (seteuid(0) == -1) {
-				tst_resm(TWARN, "seteuid(0) failed");
-				exit(1);
-			}
-
-			/* clean up things in case we are looping */
-			SAFE_UNLINK(cleanup, fname);
-			SAFE_UNLINK(cleanup, mname);
-			SAFE_RMDIR(cleanup, fdir);
-			SAFE_RMDIR(cleanup, mdir);
-		} else {
-			/* parent - let the second child carry on */
-			waitpid(pid1, &status, 0);
-			if (!WIFEXITED(status) || (WEXITSTATUS(status) != 0)) {
-				exit(WEXITSTATUS(status));
-			} else {
-				exit(0);
-			}
-		}
+		// Removed creation of child process using fork
+		// Created a thread instead of child process
+		int res;
+              pthread_t first_thread_tid;
+              res = pthread_create(&first_thread_tid, NULL, first_child_thread, NULL);
+              if (res == 0)
+              {
+                      tst_resm(TINFO, "first child thread created fine ...\n");
+                      pthread_join(first_thread_tid, NULL);
+              }
+              else
+              {
+                      tst_resm(TFAIL, "first child thread create failed");
+              }
+		
+		// Removed creation of second child process using fork
+              // Created a thread instead of child process
+		pthread_t second_thread_tid;
+              res = pthread_create(&second_thread_tid, NULL, second_child_thread, NULL);
+              if (res == 0)
+              {
+                      tst_resm(TINFO, "second child thread created fine ...\n");
+                      pthread_join(second_thread_tid, NULL);
+              }
+              else
+              {
+                      tst_resm(TFAIL, "second child thread create failed");
+              }
 	}
 
 	/*
@@ -216,6 +159,87 @@ int main(int ac, char **av)
 	cleanup();
 	tst_exit();
 
+}
+
+/*
+  set user to be nobody
+  create old dir with mode 0700
+  creat a file under it
+ */
+static void* first_child_thread(void* arg) {
+        /* set to nobody */
+        rval = setreuid(nobody_uid, nobody_uid);
+        if (rval < 0) {
+                tst_resm(TWARN, "setreuid failed to "
+                         "to set the real uid to %d and "
+                         "effective uid to %d",
+                         nobody_uid, nobody_uid);
+                perror("setreuid");
+                exit(1);
+        }
+
+        /* create the a directory with 0700 permits */
+        if (mkdir(fdir, PERMS) == -1) {
+                tst_resm(TWARN, "mkdir(%s, %#o) Failed",
+                         fdir, PERMS);
+                exit(1);
+        }
+
+        /* create "old" file under it */
+        SAFE_TOUCH(cleanup, fname, 0700, NULL);
+
+        pthread_exit(NULL);
+}
+
+/*
+  set to bin
+  create new dir with mode 0700
+  create a "new" file under it
+  try to rename file under old dir to file under new dir
+  check the test returns EACCESS
+ */
+static void* second_child_thread(void* arg){
+        /* set to bin */
+        if ((rval = seteuid(bin_uid)) == -1) {
+                tst_resm(TWARN, "seteuid() failed");
+                         perror("setreuid");
+                exit(1);
+        }
+
+        /* create "new" directory */
+        if (mkdir(mdir, PERMS) == -1) {
+                tst_resm(TWARN, "mkdir(%s, %#o) failed",
+                         mdir, PERMS);
+                exit(1);
+        }
+
+        SAFE_TOUCH(cleanup, mname, 0700, NULL);
+
+        /* rename "old" to "new" */
+        TEST(rename(fname, mname));
+        if (TEST_RETURN != -1) {
+                tst_resm(TFAIL, "call succeeded unexpectedly");
+        }
+
+        if (TEST_ERRNO != EACCES) {
+                tst_resm(TFAIL, "Expected EACCES got %d",
+                         TEST_ERRNO);
+        } else {
+                tst_resm(TPASS, "rename() returned EACCES");
+        }
+
+        /* set the process id back to root */
+        if (seteuid(0) == -1) {
+                tst_resm(TWARN, "seteuid(0) failed");
+                exit(1);
+        }
+
+        /* clean up things in case we are looping */
+        SAFE_UNLINK(cleanup, fname);
+        SAFE_UNLINK(cleanup, mname);
+        SAFE_RMDIR(cleanup, fdir);
+        SAFE_RMDIR(cleanup, mdir);
+        pthread_exit(NULL);
 }
 
 /*
